@@ -52,6 +52,7 @@ const Items = styled.div`
   width: 95%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  align-items: flex-end;
   grid-gap: 1.5rem;
   position: relative;
   top: -3rem;
