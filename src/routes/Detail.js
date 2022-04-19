@@ -10,6 +10,7 @@ const GET_ITEM = gql`
       description
       date
       thumbnail
+      isLiked @client
     }
   }
 `;
@@ -39,7 +40,7 @@ const Subtitle = styled.h4`
   margin-bottom: 1rem;
 `;
 
-const Description = styled.p`
+const Description = styled.pre`
   font-size: 1.3rem;
 `;
 
@@ -73,7 +74,13 @@ const Detail = () => {
   return (
     <Container>
       <Column>
-        {loading ? <Loading>Loading...</Loading> : <Title>{data.item.title}</Title>}
+        {loading ? (
+          <Loading>Loading...</Loading>
+        ) : (
+          <Title>
+            {data.item.title} {data.item.isLiked ? "💝" : "🤍"}
+          </Title>
+        )}
         {data?.item && (
           <>
             <Subtitle>

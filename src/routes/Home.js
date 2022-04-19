@@ -7,6 +7,7 @@ const GET_ITEMS = gql`
     items(max: 20) {
       id
       thumbnail
+      isLiked @client
     }
   }
 `;
@@ -48,10 +49,10 @@ const Loading = styled.div`
 `;
 
 const Items = styled.div`
+  width: 95%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
   grid-gap: 1.5rem;
-  width: 90%;
   position: relative;
   top: -3rem;
 `;
