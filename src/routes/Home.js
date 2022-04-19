@@ -1,30 +1,68 @@
 import { gql, useQuery } from "@apollo/client";
-import { Fragment } from "react/cjs/react.production.min";
+import styled from "styled-components";
+import Item from "../components/Item";
 
 const GET_ITEMS = gql`
-  {
-    items(max: 50) {
+  query {
+    items(max: 20) {
       id
       thumbnail
     }
   }
 `;
-console.log(GET_ITEMS);
+// console.log(GET_ITEMS);
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+`;
+
+const Header = styled.header`
+  background-image: linear-gradient(-45deg, #d754ab, #fd723a);
+  height: 45vh;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+`;
+
+const Title = styled.h1`
+  font-size: 4rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+`;
+
+const Subtitle = styled.h3`
+  font-size: 2rem;
+`;
+
+const Loading = styled.div`
+  font-size: 1.2rem;
+  opacity: 0.5;
+  font-weight: 500;
+  margin-top: 1rem;
+`;
 
 const Home = () => {
   const { loading, data, error } = useQuery(GET_ITEMS);
-  console.log(loading, data, error);
+  // console.log(loading, data, error);
 
-  if (loading) {
-    return "loading...";
-  }
-  if (data?.items) {
-    return data.items.map((item) => (
-      <Fragment key={item.id}>
-        <h1>{item.id}</h1>
-        <img src={item.thumbnail} alt={item.title} />
-      </Fragment>
-    ));
-  }
+  return (
+    <Container>
+      <Header>
+        <Title>Apollo React</Title>
+        <Subtitle>with GragphQL</Subtitle>
+      </Header>
+      {loading ? (
+        <Loading>Loading...</Loading>
+      ) : (
+        data?.items.map((item) => <Item key={item.id} {...item} />)
+      )}
+    </Container>
+  );
 };
 export default Home;
