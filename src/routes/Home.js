@@ -4,7 +4,7 @@ import Item from "../components/Item";
 
 const GET_ITEMS = gql`
   query {
-    items(max: 20) {
+    items(max: 50) {
       id
       thumbnail
     }
@@ -47,6 +47,15 @@ const Loading = styled.div`
   margin-top: 1rem;
 `;
 
+const Items = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  grid-gap: 1.5rem;
+  width: 90%;
+  position: relative;
+  top: -3rem;
+`;
+
 const Home = () => {
   const { loading, data, error } = useQuery(GET_ITEMS);
   // console.log(loading, data, error);
@@ -60,7 +69,11 @@ const Home = () => {
       {loading ? (
         <Loading>Loading...</Loading>
       ) : (
-        data?.items.map((item) => <Item key={item.id} {...item} />)
+        <Items>
+          {data?.items.map((item) => (
+            <Item key={item.id} {...item} />
+          ))}
+        </Items>
       )}
     </Container>
   );
