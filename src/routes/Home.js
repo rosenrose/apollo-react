@@ -4,7 +4,7 @@ import Item from "../components/Item";
 
 const GET_ITEMS = gql`
   query {
-    items(max: 50) {
+    items(max: 20) {
       id
       thumbnail
     }

@@ -40,7 +40,7 @@ const Subtitle = styled.h4`
 `;
 
 const Description = styled.p`
-  font-size: 1.6rem;
+  font-size: 1.3rem;
 `;
 
 const Poster = styled.div`
@@ -58,23 +58,35 @@ const Loading = styled.div`
   margin-top: 1rem;
 `;
 
+const Anchor = styled.a`
+  color: inherit;
+`;
+
 const Detail = () => {
   const { id } = useParams();
   const { loading, data, error } = useQuery(GET_ITEM, {
     variables: { id },
   });
-  console.log(loading, data, error);
+  // console.log(loading, data, error);
+  const date = new Date(data?.item.date);
 
-  return loading ? (
-    <Loading>Loading...</Loading>
-  ) : (
+  return (
     <Container>
       <Column>
-        <Title>{data.item.title}</Title>
-        <Subtitle>{data.item.id}</Subtitle>
-        <Description>{data.item.description}</Description>
+        {loading ? <Loading>Loading...</Loading> : <Title>{data.item.title}</Title>}
+        {data?.item && (
+          <>
+            <Subtitle>
+              <Anchor href={`https://youtu.be/${id}`} target="_blank" rel="noreferrer">
+                {id}
+              </Anchor>{" "}
+              | {`${date.getFullYear()}. ${date.getMonth()}. ${date.getDate()}.`}
+            </Subtitle>
+            <Description>{data.item.description}</Description>
+          </>
+        )}
       </Column>
-      <Poster bg={data.item.thumbnail} />
+      <Poster bg={data?.item.thumbnail} />
     </Container>
   );
 };
