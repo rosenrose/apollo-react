@@ -3,8 +3,8 @@ import styled from "styled-components";
 import { gql, useMutation } from "@apollo/client";
 
 const TOGGLE_LIKE = gql`
-  mutation toggle($id: String!, $isLiked: Boolean!) {
-    toggleLike(id: $id, isLiked: $isLiked) @client
+  mutation toggle($id: String!) {
+    toggleLike(id: $id) @client
   }
 `;
 
@@ -21,7 +21,7 @@ const Poster = styled.img`
 const Item = ({ id, thumbnail, isLiked }) => {
   // const onClick = ();
   const [toggleLike] = useMutation(TOGGLE_LIKE, {
-    variables: { id, isLiked },
+    variables: { id },
   });
 
   return (
