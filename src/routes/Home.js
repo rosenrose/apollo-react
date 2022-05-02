@@ -1,10 +1,11 @@
+import { useState, useEffect } from "react";
 import { gql, useQuery } from "@apollo/client";
 import styled from "styled-components";
 import Item from "../components/Item";
 
 const GET_ITEMS = gql`
-  query {
-    items(max: 20) {
+  query getItems($id: String!) {
+    items(id: $id, max: 20) {
       id
       thumbnail
       isLiked @client
@@ -54,13 +55,25 @@ const Items = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
   align-items: flex-end;
   grid-gap: 1.5rem;
-  position: relative;
-  top: -3rem;
+  margin-top: 3rem;
 `;
 
+const IdInput = styled.input`
+  width: 20rem;
+`;
+
+const initPlaylistId = "UUyWiQldYO_-yeLJC0j5oq2g";
+
 const Home = () => {
-  const { loading, data, error } = useQuery(GET_ITEMS);
+  const [playlistId, setPlaylistId] = useState(initPlaylistId);
+  const { loading, data, error } = useQuery(GET_ITEMS, {
+    variables: { id: playlistId },
+  });
   // console.log(loading, data, error);
+
+  const onChange = (event) => {
+    setPlaylistId(event.target.value);
+  };
 
   return (
     <Container>
@@ -68,6 +81,11 @@ const Home = () => {
         <Title>Apollo React</Title>
         <Subtitle>with GragphQL</Subtitle>
       </Header>
+      <IdInput type="text" onChange={onChange} list="playlists" />
+      <datalist id="playlists">
+        <option value={initPlaylistId} />
+        <option value="PLtYQ7DpMMg-I22iICgrMNC1ln3ZT4FxUj" />
+      </datalist>
       {loading ? (
         <Loading>Loading...</Loading>
       ) : (
