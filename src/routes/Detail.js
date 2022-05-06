@@ -3,8 +3,8 @@ import { gql, useQuery } from "@apollo/client";
 import styled from "styled-components";
 
 const GET_ITEM = gql`
-  query getItem($id: String!, $isRequestThumbnail: Boolean) {
-    item(id: $id, isRequestThumbnail: $isRequestThumbnail) {
+  query getItem($id: String!, $thumbnail: String) {
+    item(id: $id, thumbnail: $thumbnail) {
       id
       title
       description
@@ -70,7 +70,7 @@ const Detail = () => {
   } = useLocation();
 
   const { loading, data, error } = useQuery(GET_ITEM, {
-    variables: { id, isRequestThumbnail: !Boolean(thumbnail) },
+    variables: { id, thumbnail: thumbnail || "" },
   });
   // console.log(loading, data, error);
   const date = new Date(data?.item.date);
