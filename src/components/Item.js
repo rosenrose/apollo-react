@@ -26,7 +26,7 @@ const Item = ({ id, thumbnail, isLiked }) => {
 
   return (
     <Container>
-      <Link to={`/${id}`}>
+      <Link to={`/${id}`} state={{ thumbnail }}>
         <Poster src={thumbnail} />
       </Link>
       <button onClick={toggleLike}>{isLiked ? "Unlike" : "Like"}</button>

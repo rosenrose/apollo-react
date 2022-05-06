@@ -1,10 +1,10 @@
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { gql, useQuery } from "@apollo/client";
 import styled from "styled-components";
 
 const GET_ITEM = gql`
-  query getItem($id: String!) {
-    item(id: $id) {
+  query getItem($id: String!, $isRequestThumbnail: Boolean) {
+    item(id: $id, isRequestThumbnail: $isRequestThumbnail) {
       id
       title
       description
@@ -65,8 +65,12 @@ const Anchor = styled.a`
 
 const Detail = () => {
   const { id } = useParams();
+  const {
+    state: { thumbnail },
+  } = useLocation();
+
   const { loading, data, error } = useQuery(GET_ITEM, {
-    variables: { id },
+    variables: { id, isRequestThumbnail: !Boolean(thumbnail) },
   });
   // console.log(loading, data, error);
   const date = new Date(data?.item.date);
@@ -93,7 +97,7 @@ const Detail = () => {
           </>
         )}
       </Column>
-      <Poster bg={data?.item.thumbnail} />
+      <Poster bg={thumbnail || data?.item.thumbnail} />
     </Container>
   );
 };
