@@ -1,38 +1,39 @@
-import { useApolloClient, gql } from "@apollo/client";
-import { useEffect } from "react";
-import { useState } from "react";
+import { gql, useQuery } from "@apollo/client";
+import { Link } from "react-router-dom";
+
+const ALL_MOVIES = gql`
+  query getMovies {
+    allMovies {
+      items {
+        snippet {
+          title
+        }
+        contentDetails {
+          videoId
+        }
+      }
+    }
+  }
+`;
 
 const Movies = () => {
-  const client = useApolloClient();
-  const [movies, setMovies] = useState({});
-
-  useEffect(() => {
-    client
-      .query({
-        query: gql`
-          {
-            allMovies {
-              items {
-                snippet {
-                  title
-                }
-                contentDetails {
-                  videoId
-                }
-              }
-            }
-          }
-        `,
-      })
-      .then((result) => setMovies(result.data.allMovies));
-  }, []);
+  const { data, loading } = useQuery(ALL_MOVIES);
+  // console.log(data);
 
   return (
-    <ul>
-      {movies.items?.map((movie) => (
-        <li key={movie.contentDetails.videoId}>{movie.snippet.title}</li>
-      ))}
-    </ul>
+    <>
+      {loading ? (
+        <h1>loading</h1>
+      ) : (
+        <ul>
+          {data.allMovies.items.map((movie) => (
+            <li key={movie.contentDetails.videoId}>
+              <Link to={`/movie/${movie.contentDetails.videoId}`}>{movie.snippet.title}</Link>
+            </li>
+          ))}
+        </ul>
+      )}
+    </>
   );
 };
 
