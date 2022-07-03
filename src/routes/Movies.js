@@ -89,7 +89,7 @@ const Movies = () => {
         <input type="text" onChange={onChange} list="playlists" style={{ width: "20rem" }} />
         <datalist id="playlists">
           {playlists.map((id) => (
-            <option value={id} />
+            <option key={id} value={id} />
           ))}
         </datalist>
       </Header>
