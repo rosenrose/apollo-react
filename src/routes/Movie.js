@@ -1,16 +1,17 @@
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { gql, useQuery } from "@apollo/client";
 import styled from "styled-components";
 
 const GET_MOVIE = gql`
-  query ($movieId: String!) {
+  query ($movieId: String!, $isThumbnail: Boolean!) {
     movie(id: $movieId) {
       id
-      thumbnailUrl
+      thumbnailUrl @skip(if: $isThumbnail)
       snippet {
         title
         description
       }
+      isLiked @client
     }
   }
 `;
@@ -51,8 +52,32 @@ const Image = styled.div`
 
 const Movie = () => {
   const { id } = useParams();
-  const { data, loading } = useQuery(GET_MOVIE, { variables: { movieId: id } });
-  // console.log(data);
+  const location = useLocation();
+  const thumbnail = location.state?.thumbnail;
+  console.log(location);
+
+  const {
+    data,
+    loading,
+    client: { cache },
+  } = useQuery(GET_MOVIE, {
+    variables: { movieId: id, isThumbnail: Boolean(thumbnail) },
+  });
+  // console.log(data, loading);
+
+  const onClick = () => {
+    cache.writeFragment({
+      id: `Movie:${id}`,
+      fragment: gql`
+        fragment MovieFragment on Movie {
+          isLiked
+        }
+      `,
+      data: {
+        isLiked: !data.movie.isLiked,
+      },
+    });
+  };
 
   return (
     <Container>
@@ -61,12 +86,13 @@ const Movie = () => {
       ) : (
         <>
           <Column>
-            <Title>{data.movie.snippet.title}</Title>
-            <Description>{data.movie.snippet.description}</Description>
+            <Title>{data?.movie.snippet.title}</Title>
+            <Description>{data?.movie.snippet.description}</Description>
+            <button onClick={onClick}>{data?.movie.isLiked ? "Unlike" : "like"}</button>
           </Column>
-          <Image bg={data.movie.thumbnailUrl} />
         </>
       )}
+      <Image bg={thumbnail || data?.movie?.thumbnailUrl} />
     </Container>
   );
 };

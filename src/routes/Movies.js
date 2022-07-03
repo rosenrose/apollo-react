@@ -99,7 +99,7 @@ const Movies = () => {
         <MoviesGrid>
           {data.allMovies.map((movie) => (
             <PosterContainer key={movie.id}>
-              <Link to={`/movie/${movie.id}`}>
+              <Link to={`/movie/${movie.id}`} state={{ thumbnail: movie.thumbnailUrl }}>
                 <PosterBg background={movie.thumbnailUrl} />
               </Link>
             </PosterContainer>
